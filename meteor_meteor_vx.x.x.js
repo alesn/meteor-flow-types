@@ -60,6 +60,8 @@ declare class Meteor$Meteor {
   isDevelopment: boolean;
   isProduction: boolean;
   isServer: boolean;
+  isTest: boolean;
+  isAppTest: boolean;
   loginWithFacebook(
     options?: ?$Shape<{
       requestPermissions: $ReadOnlyArray<string>,
