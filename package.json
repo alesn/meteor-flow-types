@@ -32,6 +32,7 @@
     }
   },
   "scripts": {
+    "prettier": "prettier --write *.js",
     "test": "eslint *.js"
   }
 }
