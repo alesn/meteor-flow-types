@@ -72,7 +72,7 @@ declare class Meteor$Meteor {
       redirectUrl: string,
       auth_type: string
     }>,
-    callback?: (?(Error | Meteor$Error)) => mixed
+    callback?: (?(Error | Meteor$Error | Meteor$TypedError)) => mixed
   ): void;
   loginWithGoogle(
     options?: ?$Shape<{
@@ -83,7 +83,7 @@ declare class Meteor$Meteor {
       loginStyle: string,
       redirectUrl: string
     }>,
-    callback?: (?(Error | Meteor$Error)) => mixed
+    callback?: (?(Error | Meteor$Error | Meteor$TypedError)) => mixed
   ): void;
   loginWithPassword(
     user: string | {|email: string|} | {|id: string|} | {|username: string|},
@@ -130,6 +130,11 @@ declare class Meteor$Error {
   details?: string;
   error: string | number;
   reason?: string;
+}
+
+declare class Meteor$TypedError extends Error {
+  message: string;
+  errorType: string;
 }
 
 declare class Meteor$SubscriptionHandle {
