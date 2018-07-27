@@ -17,7 +17,22 @@ declare class Meteor$Mongo$BulkOpHandle {
   updateOne(modifier: Meteor$Mongo$Modifier): void;
 }
 
-declare class Meteor$Mongo$Collection<BaseEntryT> {
+declare type Meteor$Mongo$FindOptions = $Shape<{
+  fields?: Meteor$Mongo$FieldSpecifier,
+  limit?: number,
+  reactive?: boolean,
+  skip?: number,
+  sort?: Meteor$Mongo$SortSpecifier
+}>;
+
+declare type Meteor$Mongo$FindOptionsWithTransform<
+  EntryT,
+  TransformedEntryT
+> = Meteor$Mongo$FindOptions & {
+  transform: EntryT => TransformedEntryT
+};
+
+declare class Meteor$Mongo$Collection<EntryT> {
   _ensureIndex(
     index: {[fieldPath: string]: -1 | 1 | boolean | string},
     options?: {|
@@ -32,11 +47,11 @@ declare class Meteor$Mongo$Collection<BaseEntryT> {
   ): void;
   allow(options: {
     fetch?: string | string[],
-    insert?: (userId: string, doc: BaseEntryT) => boolean,
-    remove?: (userId: string, doc: BaseEntryT) => boolean,
+    insert?: (userId: string, doc: EntryT) => boolean,
+    remove?: (userId: string, doc: EntryT) => boolean,
     update?: (
       userId: string,
-      doc: BaseEntryT,
+      doc: EntryT,
       fieldNames: string[],
       modifier: Meteor$Mongo$Modifier
     ) => boolean
@@ -45,7 +60,7 @@ declare class Meteor$Mongo$Collection<BaseEntryT> {
     fetch?: string | string[],
     insert?: (userId: string, doc: TransformedEntryT) => boolean,
     remove?: (userId: string, doc: TransformedEntryT) => boolean,
-    transform?: BaseEntryT => TransformedEntryT,
+    transform?: EntryT => TransformedEntryT,
     update?: (
       userId: string,
       doc: TransformedEntryT,
@@ -56,11 +71,11 @@ declare class Meteor$Mongo$Collection<BaseEntryT> {
   constructor(name: string): void;
   deny(options: {
     fetch?: string | string[],
-    insert?: (userId: string, doc: BaseEntryT) => boolean,
-    remove?: (userId: string, doc: BaseEntryT) => boolean,
+    insert?: (userId: string, doc: EntryT) => boolean,
+    remove?: (userId: string, doc: EntryT) => boolean,
     update?: (
       userId: string,
-      doc: BaseEntryT,
+      doc: EntryT,
       fieldNames: string[],
       modifier: Meteor$Mongo$Modifier
     ) => boolean
@@ -69,7 +84,7 @@ declare class Meteor$Mongo$Collection<BaseEntryT> {
     fetch?: string | string[],
     insert?: (userId: string, doc: TransformedEntryT) => boolean,
     remove?: (userId: string, doc: TransformedEntryT) => boolean,
-    transform?: BaseEntryT => TransformedEntryT,
+    transform?: EntryT => TransformedEntryT,
     update?: (
       userId: string,
       doc: TransformedEntryT,
@@ -79,52 +94,26 @@ declare class Meteor$Mongo$Collection<BaseEntryT> {
   }): boolean;
   find(
     selector?: number | string | Meteor$Mongo$ObjectId | Meteor$Mongo$Selector,
-    options?: $Shape<{
-      fields: Meteor$Mongo$FieldSpecifier,
-      limit: number,
-      reactive: boolean,
-      skip: number,
-      sort: Meteor$Mongo$SortSpecifier
-    }>
-  ): Meteor$Mongo$Cursor<BaseEntryT>;
+    options?: ?Meteor$Mongo$FindOptions
+  ): Meteor$Mongo$Cursor<EntryT>;
   find<TransformedEntryT>(
     selector?: number | string | Meteor$Mongo$ObjectId | Meteor$Mongo$Selector,
-    options?: $Shape<{
-      fields: Meteor$Mongo$FieldSpecifier,
-      limit: number,
-      reactive: boolean,
-      skip: number,
-      sort: Meteor$Mongo$SortSpecifier,
-      transform: BaseEntryT => TransformedEntryT
-    }>
+    options?: ?Meteor$Mongo$FindOptionsWithTransform<EntryT, TransformedEntryT>
   ): Meteor$Mongo$Cursor<TransformedEntryT>;
   findOne(
     selector?: number | string | Meteor$Mongo$ObjectId | Meteor$Mongo$Selector,
-    options?: ?$Shape<{
-      fields: Meteor$Mongo$FieldSpecifier,
-      limit: number,
-      reactive: boolean,
-      skip: number,
-      sort: Meteor$Mongo$SortSpecifier
-    }>
-  ): ?BaseEntryT;
+    options?: ?Meteor$Mongo$FindOptions
+  ): ?EntryT;
   findOne<TransformedEntryT>(
     selector?: number | string | Meteor$Mongo$ObjectId | Meteor$Mongo$Selector,
-    options?: ?$Shape<{
-      fields: Meteor$Mongo$FieldSpecifier,
-      limit: number,
-      reactive: boolean,
-      skip: number,
-      sort: Meteor$Mongo$SortSpecifier,
-      transform: BaseEntryT => TransformedEntryT
-    }>
+    options?: ?Meteor$Mongo$FindOptionsWithTransform<EntryT, TransformedEntryT>
   ): ?TransformedEntryT;
-  insert(doc: BaseEntryT): string;
+  insert(doc: EntryT): string;
   insert(
-    doc: BaseEntryT,
+    doc: EntryT,
     callback: ((Error, void) => mixed) & ((void, string) => mixed)
   ): void;
-  rawCollection(): Meteor$Mongo$RawCollection<BaseEntryT>;
+  rawCollection(): Meteor$Mongo$RawCollection<EntryT>;
   remove(
     selector: number | string | Meteor$Mongo$ObjectId | Meteor$Mongo$Selector
   ): void;
@@ -157,13 +146,11 @@ declare class Meteor$Mongo$Collection<BaseEntryT> {
   ): void;
 }
 
-declare class Meteor$Mongo$Cursor<BaseEntryT> {
+declare class Meteor$Mongo$Cursor<EntryT> {
   count(): number;
-  fetch(): BaseEntryT[];
-  forEach((BaseEntryT) => mixed): void;
-  map<TransformedEntryT>(
-    (BaseEntryT) => TransformedEntryT
-  ): TransformedEntryT[];
+  fetch(): Array<EntryT>;
+  forEach((EntryT) => mixed): void;
+  map<TransformedEntryT>((EntryT) => TransformedEntryT): TransformedEntryT[];
 }
 
 declare type Meteor$Mongo$FieldSpecifier = {
