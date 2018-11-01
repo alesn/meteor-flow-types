@@ -125,7 +125,8 @@ declare class Meteor$Meteor {
   ): () => T;
 }
 
-declare class Meteor$Error {
+// Meteor.Error is instanceof Error
+declare class Meteor$Error extends Error {
   constructor(error: string | number, reason?: string, details?: string): void;
   details?: string;
   error: string | number;
