@@ -92,8 +92,8 @@ declare class Meteor$Meteor {
   ): void;
   logout(callback?: (?(Error | Meteor$Error)) => mixed): void;
   methods({[name: string]: (...args: mixed[]) => mixed}): void;
-  publish(name: string, publication: (...args: mixed[]) => mixed): void;
-  publish({[name: string]: (...args: mixed[]) => mixed}): void;
+  publish(name: string, publication: Function): void;
+  publish({[name: string]: Function}): void;
   reconnect(): void;
   release: string;
   setInterval(fn: () => mixed, delay?: number): void;
