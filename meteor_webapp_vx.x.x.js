@@ -11,14 +11,14 @@ type npm$connect$handle =
   | ((
       req: npm$connect$IncomingMessage,
       res: npm$connect$ServerResponse,
-      next: (?Error) => void
-    ) => void)
+      next: (?Error) => mixed
+    ) => mixed)
   | ((
       error: Error,
       req: npm$connect$IncomingMessage,
       res: npm$connect$ServerResponse,
-      next: (?Error) => void
-    ) => void);
+      next: (?Error) => mixed
+    ) => mixed);
 
 declare class npm$connect {
   route: string;
